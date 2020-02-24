@@ -1,0 +1,18 @@
+21:13:13 **** Incremental Build of configuration Debug for project I2C ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:113:21: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
+         CDC_tx_size=sprintf(CDC_tx_buff,"Scanning I2C bus:\r\n");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
+                     ^~~~~~~
+../Core/Src/main.c:113:21: warning: incompatible implicit declaration of built-in function 'sprintf'
+../Core/Src/main.c:113:21: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+arm-none-eabi-g++ -o "I2C.elf" @"objects.list"   -mcpu=cortex-m3 -T"E:\Mercury\STM32_Mercury\I2C\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="I2C.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Core/Src/main.o: In function `main':
+E:/Mercury/STM32_Mercury/I2C/Debug/../Core/Src/main.c:114: undefined reference to `CDC_Transmit_FS'
+collect2.exe: error: ld returned 1 exit status
+make: *** [makefile:59: I2C.elf] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+21:13:14 Build Failed. 2 errors, 2 warnings. (took 1s.532ms)
+

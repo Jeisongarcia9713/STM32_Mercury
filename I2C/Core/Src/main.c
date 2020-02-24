@@ -20,11 +20,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include  "stm32f1xx_hal_i2c.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,10 +49,10 @@ const int motor_1_min=350;//constante para la minima posición del servomotor
 
 
 char CDC_tx_buff[60];//El buffer para enviar los datos por usb
-uint8_t CDC_size_buff;//tamaño de buffer
+uint8_t CDC_tx_size;//tamaño de buffer
 char CDC_rx_flag;//Variable que se modifica en el archivo  usbd_cdc_if.c
-extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);//Función que se usa para enviar por usbd_cdc_if.c
-static const uint8_t MPU_ADDR = 0x68 << 1;
+extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len); //Función que se usa para enviar por usbd_cdc_if.c
+//static const uint8_t MPU_ADDR = 0x68 << 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,7 +98,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -111,19 +109,21 @@ int main(void)
   while (1)
   {
         HAL_Delay(2000);
-		CDC_size_buff=sprintf(CDC_tx_buff,"Scanning I2C bus:\r\n");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
-		CDC_Transmit_FS(CDC_tx_buff, CDC_size_buff);//Transmite por USB
+
+        CDC_tx_size=sprintf(CDC_tx_buff,"Scanning I2C bus:\r\n");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
+		CDC_Transmit_FS((uint8_t *)&CDC_tx_buff,CDC_tx_size);//Transmite por USB
 		int i=1;
 		for (i=1; i<128; i++)
 		{
 		  int result = HAL_I2C_IsDeviceReady(&hi2c1,i<<1,2, 2);
 		  if (result != HAL_OK) // HAL_ERROR or HAL_BUSY or HAL_TIMEOUT
 		  {
-			CDC_size_buff=sprintf(CDC_tx_buff,".");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
-			CDC_Transmit_FS(CDC_tx_buff, CDC_size_buff);//Transmite por USB
+			//CDC_tx_size=sprintf(CDC_tx_buff,".");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
+			CDC_Transmit_FS(CDC_tx_buff,CDC_tx_size);//Transmite por USB
 		  }else{
-			CDC_size_buff=sprintf(CDC_tx_buff,"0x%X", i);//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
-			CDC_Transmit_FS(CDC_tx_buff, CDC_size_buff);//Transmite por USB
+			//CDC_tx_size=sprintf(CDC_tx_buff,"0x%X", i);//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
+			//CDC_Transmit_FS(CDC_tx_buff,CDC_tx_size);//Transmite por USB
+			HAL_GPIO_TogglePin(Led_GPIO_Port, Led_Pin);
 		  }
 		}
 
@@ -142,7 +142,6 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the CPU, AHB and APB busses clocks 
   */
@@ -170,12 +169,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
 }
 
 /**
@@ -187,7 +180,16 @@ static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitStruct.Pin = MPU_SCL_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(MPU_SCL_GPIO_Port, &GPIO_InitStruct);
 
+	GPIO_InitStruct.Pin = MPU_SDA_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(MPU_SDA_GPIO_Port, &GPIO_InitStruct);
   /* USER CODE END I2C1_Init 0 */
 
   /* USER CODE BEGIN I2C1_Init 1 */
@@ -224,7 +226,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -251,7 +252,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+ if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+	  {
 
+	  }
   /* USER CODE END Error_Handler_Debug */
 }
 
