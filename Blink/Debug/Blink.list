@@ -91,7 +91,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-   HAL_Init();
+  HAL_Init();
  8000152:	f000 fadd 	bl	8000710 <HAL_Init>
   /* USER CODE BEGIN Init */
 
@@ -118,89 +118,90 @@ int main(void)
 
   while (1)
   {
-	HAL_Delay(1000);
- 800016a:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 800016e:	f000 fb31 	bl	80007d4 <HAL_Delay>
+	HAL_Delay(100);
+ 800016a:	2064      	movs	r0, #100	; 0x64
+ 800016c:	f000 fb32 	bl	80007d4 <HAL_Delay>
 	CDC_tx_size=sprintf(CDC_tx_buff,"Scanning I2C bus:\r\n");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
- 8000172:	4a23      	ldr	r2, [pc, #140]	; (8000200 <main+0xb4>)
- 8000174:	4b23      	ldr	r3, [pc, #140]	; (8000204 <main+0xb8>)
- 8000176:	4615      	mov	r5, r2
- 8000178:	461c      	mov	r4, r3
- 800017a:	cc0f      	ldmia	r4!, {r0, r1, r2, r3}
- 800017c:	6028      	str	r0, [r5, #0]
- 800017e:	6069      	str	r1, [r5, #4]
- 8000180:	60aa      	str	r2, [r5, #8]
- 8000182:	60eb      	str	r3, [r5, #12]
- 8000184:	6820      	ldr	r0, [r4, #0]
- 8000186:	6128      	str	r0, [r5, #16]
- 8000188:	2313      	movs	r3, #19
- 800018a:	b2da      	uxtb	r2, r3
- 800018c:	4b1e      	ldr	r3, [pc, #120]	; (8000208 <main+0xbc>)
- 800018e:	701a      	strb	r2, [r3, #0]
+ 8000170:	4a23      	ldr	r2, [pc, #140]	; (8000200 <main+0xb4>)
+ 8000172:	4b24      	ldr	r3, [pc, #144]	; (8000204 <main+0xb8>)
+ 8000174:	4615      	mov	r5, r2
+ 8000176:	461c      	mov	r4, r3
+ 8000178:	cc0f      	ldmia	r4!, {r0, r1, r2, r3}
+ 800017a:	6028      	str	r0, [r5, #0]
+ 800017c:	6069      	str	r1, [r5, #4]
+ 800017e:	60aa      	str	r2, [r5, #8]
+ 8000180:	60eb      	str	r3, [r5, #12]
+ 8000182:	6820      	ldr	r0, [r4, #0]
+ 8000184:	6128      	str	r0, [r5, #16]
+ 8000186:	2313      	movs	r3, #19
+ 8000188:	b2da      	uxtb	r2, r3
+ 800018a:	4b1f      	ldr	r3, [pc, #124]	; (8000208 <main+0xbc>)
+ 800018c:	701a      	strb	r2, [r3, #0]
 	CDC_Transmit_FS((uint8_t *)&CDC_tx_buff,CDC_tx_size);//Transmite por USB
- 8000190:	4b1d      	ldr	r3, [pc, #116]	; (8000208 <main+0xbc>)
- 8000192:	781b      	ldrb	r3, [r3, #0]
- 8000194:	b29b      	uxth	r3, r3
- 8000196:	4619      	mov	r1, r3
- 8000198:	4819      	ldr	r0, [pc, #100]	; (8000200 <main+0xb4>)
- 800019a:	f005 f989 	bl	80054b0 <CDC_Transmit_FS>
+ 800018e:	4b1e      	ldr	r3, [pc, #120]	; (8000208 <main+0xbc>)
+ 8000190:	781b      	ldrb	r3, [r3, #0]
+ 8000192:	b29b      	uxth	r3, r3
+ 8000194:	4619      	mov	r1, r3
+ 8000196:	481a      	ldr	r0, [pc, #104]	; (8000200 <main+0xb4>)
+ 8000198:	f005 f98a 	bl	80054b0 <CDC_Transmit_FS>
 	uint8_t i=1;
- 800019e:	2301      	movs	r3, #1
- 80001a0:	71fb      	strb	r3, [r7, #7]
+ 800019c:	2301      	movs	r3, #1
+ 800019e:	71fb      	strb	r3, [r7, #7]
 	for (i=1; i<128; i++)
- 80001a2:	2301      	movs	r3, #1
- 80001a4:	71fb      	strb	r3, [r7, #7]
- 80001a6:	e026      	b.n	80001f6 <main+0xaa>
+ 80001a0:	2301      	movs	r3, #1
+ 80001a2:	71fb      	strb	r3, [r7, #7]
+ 80001a4:	e026      	b.n	80001f4 <main+0xa8>
 	{
 		int result = HAL_I2C_IsDeviceReady(&hi2c2,i<<1,1,1);
- 80001a8:	79fb      	ldrb	r3, [r7, #7]
- 80001aa:	b29b      	uxth	r3, r3
- 80001ac:	005b      	lsls	r3, r3, #1
- 80001ae:	b299      	uxth	r1, r3
- 80001b0:	2301      	movs	r3, #1
- 80001b2:	2201      	movs	r2, #1
- 80001b4:	4815      	ldr	r0, [pc, #84]	; (800020c <main+0xc0>)
- 80001b6:	f000 feef 	bl	8000f98 <HAL_I2C_IsDeviceReady>
- 80001ba:	4603      	mov	r3, r0
- 80001bc:	603b      	str	r3, [r7, #0]
+ 80001a6:	79fb      	ldrb	r3, [r7, #7]
+ 80001a8:	b29b      	uxth	r3, r3
+ 80001aa:	005b      	lsls	r3, r3, #1
+ 80001ac:	b299      	uxth	r1, r3
+ 80001ae:	2301      	movs	r3, #1
+ 80001b0:	2201      	movs	r2, #1
+ 80001b2:	4816      	ldr	r0, [pc, #88]	; (800020c <main+0xc0>)
+ 80001b4:	f000 fef0 	bl	8000f98 <HAL_I2C_IsDeviceReady>
+ 80001b8:	4603      	mov	r3, r0
+ 80001ba:	603b      	str	r3, [r7, #0]
 		if (result != HAL_OK) // HAL_ERROR or HAL_BUSY or HAL_TIMEOUT
- 80001be:	683b      	ldr	r3, [r7, #0]
- 80001c0:	2b00      	cmp	r3, #0
- 80001c2:	d115      	bne.n	80001f0 <main+0xa4>
+ 80001bc:	683b      	ldr	r3, [r7, #0]
+ 80001be:	2b00      	cmp	r3, #0
+ 80001c0:	d115      	bne.n	80001ee <main+0xa2>
 		{
 			//CDC_tx_size=sprintf(CDC_tx_buff,".");//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
 			//CDC_Transmit_FS(CDC_tx_buff,CDC_tx_size);//Transmite por USB
 		}else{
 			CDC_tx_size=sprintf(CDC_tx_buff,"0x%X", i);//Guarda en la variable CDC_tx_buff el string y el tamaño del string queda en CDC_size_buff
- 80001c4:	79fb      	ldrb	r3, [r7, #7]
- 80001c6:	461a      	mov	r2, r3
- 80001c8:	4911      	ldr	r1, [pc, #68]	; (8000210 <main+0xc4>)
- 80001ca:	480d      	ldr	r0, [pc, #52]	; (8000200 <main+0xb4>)
- 80001cc:	f005 fd74 	bl	8005cb8 <siprintf>
- 80001d0:	4603      	mov	r3, r0
- 80001d2:	b2da      	uxtb	r2, r3
- 80001d4:	4b0c      	ldr	r3, [pc, #48]	; (8000208 <main+0xbc>)
- 80001d6:	701a      	strb	r2, [r3, #0]
+ 80001c2:	79fb      	ldrb	r3, [r7, #7]
+ 80001c4:	461a      	mov	r2, r3
+ 80001c6:	4912      	ldr	r1, [pc, #72]	; (8000210 <main+0xc4>)
+ 80001c8:	480d      	ldr	r0, [pc, #52]	; (8000200 <main+0xb4>)
+ 80001ca:	f005 fd75 	bl	8005cb8 <siprintf>
+ 80001ce:	4603      	mov	r3, r0
+ 80001d0:	b2da      	uxtb	r2, r3
+ 80001d2:	4b0d      	ldr	r3, [pc, #52]	; (8000208 <main+0xbc>)
+ 80001d4:	701a      	strb	r2, [r3, #0]
 			CDC_Transmit_FS((uint8_t *)CDC_tx_buff,CDC_tx_size);//Transmite por USB
- 80001d8:	4b0b      	ldr	r3, [pc, #44]	; (8000208 <main+0xbc>)
- 80001da:	781b      	ldrb	r3, [r3, #0]
- 80001dc:	b29b      	uxth	r3, r3
- 80001de:	4619      	mov	r1, r3
- 80001e0:	4807      	ldr	r0, [pc, #28]	; (8000200 <main+0xb4>)
- 80001e2:	f005 f965 	bl	80054b0 <CDC_Transmit_FS>
+ 80001d6:	4b0c      	ldr	r3, [pc, #48]	; (8000208 <main+0xbc>)
+ 80001d8:	781b      	ldrb	r3, [r3, #0]
+ 80001da:	b29b      	uxth	r3, r3
+ 80001dc:	4619      	mov	r1, r3
+ 80001de:	4808      	ldr	r0, [pc, #32]	; (8000200 <main+0xb4>)
+ 80001e0:	f005 f966 	bl	80054b0 <CDC_Transmit_FS>
 			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
- 80001e6:	f44f 5100 	mov.w	r1, #8192	; 0x2000
- 80001ea:	480a      	ldr	r0, [pc, #40]	; (8000214 <main+0xc8>)
- 80001ec:	f000 fd94 	bl	8000d18 <HAL_GPIO_TogglePin>
+ 80001e4:	f44f 5100 	mov.w	r1, #8192	; 0x2000
+ 80001e8:	480a      	ldr	r0, [pc, #40]	; (8000214 <main+0xc8>)
+ 80001ea:	f000 fd95 	bl	8000d18 <HAL_GPIO_TogglePin>
 	for (i=1; i<128; i++)
- 80001f0:	79fb      	ldrb	r3, [r7, #7]
- 80001f2:	3301      	adds	r3, #1
- 80001f4:	71fb      	strb	r3, [r7, #7]
- 80001f6:	f997 3007 	ldrsb.w	r3, [r7, #7]
- 80001fa:	2b00      	cmp	r3, #0
- 80001fc:	dad4      	bge.n	80001a8 <main+0x5c>
+ 80001ee:	79fb      	ldrb	r3, [r7, #7]
+ 80001f0:	3301      	adds	r3, #1
+ 80001f2:	71fb      	strb	r3, [r7, #7]
+ 80001f4:	f997 3007 	ldrsb.w	r3, [r7, #7]
+ 80001f8:	2b00      	cmp	r3, #0
+ 80001fa:	dad4      	bge.n	80001a6 <main+0x5a>
   {
- 80001fe:	e7b4      	b.n	800016a <main+0x1e>
+ 80001fc:	e7b5      	b.n	800016a <main+0x1e>
+ 80001fe:	bf00      	nop
  8000200:	200004d8 	.word	0x200004d8
  8000204:	080064f4 	.word	0x080064f4
  8000208:	20000514 	.word	0x20000514
@@ -417,7 +418,7 @@ static void MX_I2C2_Init(void)
  800032c:	4b12      	ldr	r3, [pc, #72]	; (8000378 <MX_I2C2_Init+0x50>)
  800032e:	4a13      	ldr	r2, [pc, #76]	; (800037c <MX_I2C2_Init+0x54>)
  8000330:	601a      	str	r2, [r3, #0]
-  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.ClockSpeed = 400000;
  8000332:	4b11      	ldr	r3, [pc, #68]	; (8000378 <MX_I2C2_Init+0x50>)
  8000334:	4a12      	ldr	r2, [pc, #72]	; (8000380 <MX_I2C2_Init+0x58>)
  8000336:	605a      	str	r2, [r3, #4]
@@ -468,7 +469,7 @@ static void MX_I2C2_Init(void)
  8000376:	bd80      	pop	{r7, pc}
  8000378:	20000484 	.word	0x20000484
  800037c:	40005800 	.word	0x40005800
- 8000380:	000186a0 	.word	0x000186a0
+ 8000380:	00061a80 	.word	0x00061a80
 
 08000384 <MX_GPIO_Init>:
   * @brief GPIO Initialization Function
